@@ -1,5 +1,6 @@
 package com.hanul.shop.ShopAgit.common.exception;
 
+import com.hanul.shop.ShopAgit.common.response.ApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -9,27 +10,27 @@ public class GlobalExceptionHandler {
 
 
     @ExceptionHandler(InvalidPriceException.class)
-    public ResponseEntity<ErrorResponse> handleInvalidPrice(InvalidPriceException e){
-        ErrorResponse errorResponse = new ErrorResponse(e.getErrorCode().getCode(), e.getMessage());
+    public ResponseEntity<ApiResponse<Void>> handleInvalidPrice(InvalidPriceException e){
+        ErrorCode errorCode = e.getErrorCode();
         return ResponseEntity
-                .status(e.getErrorCode().getStatus())
-                .body(errorResponse);
+                .status(errorCode.getStatus())
+                .body(ApiResponse.error(errorCode));
     }
 
     @ExceptionHandler(NameMissingException.class)
-    public ResponseEntity<ErrorResponse> handleNameMissing(NameMissingException e){
-        ErrorResponse errorResponse = new ErrorResponse(e.getErrorCode().getCode(), e.getMessage());
-        return  ResponseEntity
-                .status(e.getErrorCode().getStatus())
-                .body(errorResponse);
+    public ResponseEntity<ApiResponse<Void>> handleNameMissing(NameMissingException e){
+        ErrorCode errorCode = e.getErrorCode();
+        return ResponseEntity
+                .status(errorCode.getStatus())
+                .body(ApiResponse.error(errorCode));
     }
 
     @ExceptionHandler(InvalidStockException.class)
-    public ResponseEntity<ErrorResponse> handleInvalidStock(InvalidStockException e){
-        ErrorResponse errorResponse = new ErrorResponse(e.getErrorCode().getCode(), e.getMessage());
-        return  ResponseEntity
-                .status(e.getErrorCode().getStatus())
-                .body(errorResponse);
+    public ResponseEntity<ApiResponse<Void>> handleInvalidStock(InvalidStockException e){
+        ErrorCode errorCode = e.getErrorCode();
+        return ResponseEntity
+                .status(errorCode.getStatus())
+                .body(ApiResponse.error(errorCode));
     }
 
 

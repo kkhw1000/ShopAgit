@@ -24,6 +24,7 @@ public class Product {
     @Column(nullable = false)
     private int stock;
 
+    //JPA용
     protected Product() {
     }
 

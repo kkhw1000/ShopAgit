@@ -6,7 +6,8 @@ import lombok.Getter;
 public enum ErrorCode {
     MISSING_NAME(400,"MISSING_NAME","name은 null 일 수 없습니다."),
     INVALID_PRICE(400,"INVALID_PRICE","price 는 0 이하로 설정 할 수 없습니다."),
-    INVALID_STOCK(400,"INVALID_STOCK" ,"stock 은 음수로 설정 할 수 없습니다." );
+    INVALID_STOCK(400,"INVALID_STOCK" ,"stock 은 음수로 설정 할 수 없습니다." ),
+    PRODUCT_NOTFOUND(404, "PRODUCT_NOTFOUND", "Product를 찾지 못 했습니다.");
 
 
     private final int status;
