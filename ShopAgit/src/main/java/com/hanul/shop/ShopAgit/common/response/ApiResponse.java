@@ -14,7 +14,7 @@ public class ApiResponse<T> {
     private final String message;
     private final LocalDateTime timestamp;
 
-    public ApiResponse(T data, boolean success, int status, String message) {
+    private ApiResponse(boolean success, int status, String message, T data) {
         this.data = data;
         this.success = success;
         this.status = status;
@@ -23,14 +23,15 @@ public class ApiResponse<T> {
     }
 
     public static <T> ApiResponse<T> success(T data) {
-        return new ApiResponse<>(data, true, 200, null);
+        return new ApiResponse<>(true, 200, null, data);
     }
 
     public static <T> ApiResponse<T> success(T data, String message) {
-        return new ApiResponse<>(data, true, 200, message);
+        return new ApiResponse<>(true, 200, message, data);
     }
+
     public static <T> ApiResponse<T> error(ErrorCode errorCode) {
-        return new ApiResponse<>(null,false,errorCode.getStatus(), errorCode.getMessage());
+        return new ApiResponse<>(false, errorCode.getStatus(), errorCode.getMessage(), null);
     }
 
 }

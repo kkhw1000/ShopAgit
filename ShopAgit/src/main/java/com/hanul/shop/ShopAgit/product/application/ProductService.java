@@ -13,10 +13,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -31,20 +29,21 @@ public class ProductService {
         Product newProduct = Product.create(name, price, stock);
         Product saved = productRepository.save(newProduct);
         log.debug("Product 저장 성공 : {} ", saved);
+        log.info("새 상품 생성 성공: id={}, name={}", saved.getId(), saved.getName());
         return saved;
     }
 
     //TODO 이거 오히려 성능 안 좋아 질 수 도있다고 하는 글을 본것같음, 나중에 확인하기
     @Transactional(readOnly = true)
     public Product findByName(String name) {
-        Product found = productRepository.findByName(name).orElseThrow(() -> new ProductNotFoundException(ErrorCode.PRODUCT_NOTFOUND));
+        Product found = productRepository.findByName(name).orElseThrow(() -> new ProductNotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
         log.debug("Product, name으로 찾기 : {} ", found);
         return found;
     }
 
     @Transactional(readOnly = true)
     public Product getProductById(long id) {
-        Product productById = productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(ErrorCode.PRODUCT_NOTFOUND));
+        Product productById = productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
         log.debug("Product, id로 찾기 : {}", productById);
         return productById;
     }
@@ -54,6 +53,7 @@ public class ProductService {
         List<ProductSummaryResponse> productSummaryResponses = new ArrayList<>();
         Pageable pageable = PageRequest.of(page, size);
         Page<Product> productPage = productRepository.findAll(pageable);
+        log.debug("상품 목록 조회: page={}, size={}, totalElements={}", page, size, productPage.getTotalElements());
         productPage.getContent().forEach(product -> {
             productSummaryResponses.add(toProductSummaryResponse(product));
         });
@@ -65,7 +65,7 @@ public class ProductService {
         ProductSummaryResponse dto = ProductSummaryResponse.builder()
                 .id(product.getId())
                 .name(product.getName())
-                .price(product.getPrice())
+                .originalPrice(product.getPrice())
                 .build();
 
         return dto;
