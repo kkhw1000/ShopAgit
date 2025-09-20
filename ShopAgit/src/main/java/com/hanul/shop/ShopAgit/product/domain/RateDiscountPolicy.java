@@ -1,7 +1,7 @@
 package com.hanul.shop.ShopAgit.product.domain;
 
 import com.hanul.shop.ShopAgit.common.exception.ErrorCode;
-import com.hanul.shop.ShopAgit.common.exception.InvalidDisCountPercentException;
+import com.hanul.shop.ShopAgit.common.exception.InvalidDiscountPercentException;
 import lombok.Getter;
 
 @Getter
@@ -21,7 +21,7 @@ public class RateDiscountPolicy implements discountPolicy {
 
     public static RateDiscountPolicy of(int percent) {
         if (percent < 1 || percent > 99) {
-            throw new InvalidDisCountPercentException(ErrorCode.INVALID_DISCOUNT_PERCENT);
+            throw new InvalidDiscountPercentException(ErrorCode.INVALID_DISCOUNT_PERCENT);
         }
         return new RateDiscountPolicy(percent);
     }
