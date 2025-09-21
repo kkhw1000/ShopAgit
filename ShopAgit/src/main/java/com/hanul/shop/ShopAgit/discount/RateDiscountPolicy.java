@@ -1,13 +1,18 @@
-package com.hanul.shop.ShopAgit.product.domain;
+package com.hanul.shop.ShopAgit.discount;
 
 import com.hanul.shop.ShopAgit.common.exception.ErrorCode;
 import com.hanul.shop.ShopAgit.common.exception.InvalidDiscountPercentException;
+import jakarta.persistence.DiscriminatorValue;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
-public class RateDiscountPolicy implements discountPolicy {
+@DiscriminatorValue("RATE")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class RateDiscountPolicy extends DiscountPolicy {
 
-    private final int percent;
+    private int percent;
 
     private RateDiscountPolicy(int percent) {
         this.percent = percent;

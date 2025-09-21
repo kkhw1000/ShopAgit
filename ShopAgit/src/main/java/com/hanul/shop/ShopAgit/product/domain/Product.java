@@ -4,6 +4,7 @@ import com.hanul.shop.ShopAgit.common.exception.ErrorCode;
 import com.hanul.shop.ShopAgit.common.exception.InvalidPriceException;
 import com.hanul.shop.ShopAgit.common.exception.InvalidStockException;
 import com.hanul.shop.ShopAgit.common.exception.NameMissingException;
+import com.hanul.shop.ShopAgit.discount.DiscountPolicy;
 import jakarta.persistence.*;
 import lombok.Getter;
 
@@ -23,6 +24,9 @@ public class Product {
 
     @Column(nullable = false)
     private int stock;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private DiscountPolicy  discountPolicy;
 
     //JPA용
     protected Product() {
