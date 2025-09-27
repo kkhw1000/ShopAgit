@@ -4,7 +4,6 @@ import com.hanul.shop.ShopAgit.common.exception.ErrorCode;
 import com.hanul.shop.ShopAgit.common.exception.InvalidPriceException;
 import com.hanul.shop.ShopAgit.common.exception.InvalidStockException;
 import com.hanul.shop.ShopAgit.common.exception.NameMissingException;
-import com.hanul.shop.ShopAgit.discount.DiscountPolicy;
 import jakarta.persistence.*;
 import lombok.Getter;
 
@@ -23,31 +22,31 @@ public class Product {
     private int price;
 
     @Column(nullable = false)
-    private int stock;
+    private int stockQuantity;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private DiscountPolicy  discountPolicy;
+    //TODO Order, OrderItem 만든 후 추후 다시 적용
+/*    @ManyToOne
+    private DiscountPolicyEntity discountPolicy;*/
 
     //JPA용
     protected Product() {
     }
 
-    //Id 부여받지 못한 상태
-    private Product(String name, int price, int stock) {
+    private Product(String name, int price, int stockQuantity) {
         this.name = name;
         this.price = price;
-        this.stock = stock;
+        this.stockQuantity = stockQuantity;
     }
 
 
     //팩토리 메소드
-    public static Product create(String name, int price, int stock) {
+    public static Product create(String name, int price, int stockQuantity) {
 
         if (name == null) throw new NameMissingException(ErrorCode.MISSING_NAME);
         if (price <= 0) throw new InvalidPriceException(ErrorCode.INVALID_PRICE);
-        if (stock <= 0 ) throw new InvalidStockException(ErrorCode.INVALID_STOCK);
+        if (stockQuantity <= 0 ) throw new InvalidStockException(ErrorCode.INVALID_STOCK);
 
-        return new Product(name, price, stock);
+        return new Product(name, price, stockQuantity);
     }
 
 

@@ -1,10 +1,9 @@
-package com.hanul.shop.ShopAgit.user.domain;
+package com.hanul.shop.ShopAgit.member.domain;
 
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "users")
-public class User {
+public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
