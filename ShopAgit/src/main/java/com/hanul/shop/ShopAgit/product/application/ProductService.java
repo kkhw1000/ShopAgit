@@ -2,8 +2,10 @@ package com.hanul.shop.ShopAgit.product.application;
 
 import com.hanul.shop.ShopAgit.common.exception.ErrorCode;
 import com.hanul.shop.ShopAgit.common.exception.ProductNotFoundException;
+import com.hanul.shop.ShopAgit.discount.policy.DiscountType;
 import com.hanul.shop.ShopAgit.product.domain.Product;
 import com.hanul.shop.ShopAgit.product.domain.ProductRepository;
+import com.hanul.shop.ShopAgit.product.presentation.DiscountInfo;
 import com.hanul.shop.ShopAgit.product.presentation.ProductSummaryResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -49,23 +52,29 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<ProductSummaryResponse> getProducts(int page, int size) {
-        List<ProductSummaryResponse> productSummaryResponses = new ArrayList<>();
-        Pageable pageable = PageRequest.of(page, size);
+    public Page<ProductSummaryResponse> getProducts(Pageable pageable) {
         Page<Product> productPage = productRepository.findAll(pageable);
-        log.debug("상품 목록 조회: page={}, size={}, totalElements={}", page, size, productPage.getTotalElements());
-        productPage.getContent().forEach(product -> {
-            productSummaryResponses.add(toProductSummaryResponse(product));
-        });
-        return productSummaryResponses;
+        Page<ProductSummaryResponse> productSummaryResponsePage = productPage.map(this::toProductSummaryResponse);
+        log.debug("상품 목록 조회: page={}, size={}, totalElements={}", pageable.getPageNumber(), pageable.getPageSize(), productPage.getTotalElements());
+        return productSummaryResponsePage;
     }
 
 
     private ProductSummaryResponse toProductSummaryResponse(Product product) {
+
+        List<DiscountInfo> list = product.getPolicyEntities().stream().map
+                        (policy -> DiscountInfo.builder()
+                        .type(policy.getDiscountType())
+                        .value(policy.getValue())
+                        .build())
+                .toList();
+
         ProductSummaryResponse dto = ProductSummaryResponse.builder()
                 .id(product.getId())
                 .name(product.getName())
                 .originalPrice(product.getPrice())
+                .discountInfo(list)
+                .discountedPrice(1000) //TODO DUMMY데이터 삽입 중 나중에 해결할 것.
                 .build();
 
         return dto;

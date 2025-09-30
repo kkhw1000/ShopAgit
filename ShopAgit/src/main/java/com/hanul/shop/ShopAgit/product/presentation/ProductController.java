@@ -7,6 +7,8 @@ import com.hanul.shop.ShopAgit.product.application.ProductService;
 import com.hanul.shop.ShopAgit.product.domain.Product;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,16 +30,11 @@ public class ProductController {
     }
 
     @GetMapping("/products")
-    public ResponseEntity<ApiResponse<List<ProductSummaryResponse>>> findAllProducts(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        List<ProductSummaryResponse> summaryResponses = productService.getProducts(page, size);
-        if (summaryResponses.isEmpty()) {
-            log.info("상품 목록 조회 결과 없음 (page={}, size={})", page, size);
-            return ResponseEntity.ok().body(ApiResponse.success(summaryResponses,"결과가 없습니다."));
-        }
-        log.info("상품 목록 조회 성공 (count={})", summaryResponses.size());
-        return  ResponseEntity.ok().body(ApiResponse.success(summaryResponses,"상품 목록 조회 성공"));
+    public ResponseEntity<ApiResponse<Page<ProductSummaryResponse>>> findAllProducts(Pageable pageable) {
+        Page<ProductSummaryResponse> summaryResponses = productService.getProducts(pageable);
+        if (summaryResponses.isEmpty()) log.info("상품 목록 조회 결과 없음 (page={}, size={})", pageable.getPageNumber(), pageable.getPageSize());
+        log.info("상품 목록 조회 성공 (count={})", summaryResponses.getTotalElements());
+        return ResponseEntity.ok().body(ApiResponse.success(summaryResponses, "상품 목록 조회 성공"));
     }
 
 }

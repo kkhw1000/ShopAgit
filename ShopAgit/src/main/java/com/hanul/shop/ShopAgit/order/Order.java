@@ -1,5 +1,7 @@
 package com.hanul.shop.ShopAgit.order;
 
+import com.hanul.shop.ShopAgit.common.exception.DomainException;
+import com.hanul.shop.ShopAgit.common.exception.ErrorCode;
 import com.hanul.shop.ShopAgit.orderItem.OrderItem;
 import com.hanul.shop.ShopAgit.member.domain.Member;
 import jakarta.persistence.*;
@@ -10,6 +12,7 @@ import java.util.List;
 
 @Entity
 @Getter
+@Table(name = "orders")
 //TODO: 익셉션 생성하기.
 public class Order {
 
@@ -54,14 +57,14 @@ public class Order {
 
     public void addOrderItem(OrderItem orderItem) {
         orderItems.add(orderItem);
-        orderItem.registryOrder(this);
+        orderItem.linkOrder(this);
     }
 
     public void confirm() {
 
         OrderStatus target = OrderStatus.ORDERED;
         //TODO 익셉션 생성 할 것. ex) 주문을 완료 할수 없습니다.
-        if (!this.orderStatus.canChangeStatus(target)) { return;}
+        if (!this.orderStatus.canChangeStatus(target)) throw new DomainException(ErrorCode.CANNOT_CHANGE_STATUS);
 
         this.orderStatus = target;
     }

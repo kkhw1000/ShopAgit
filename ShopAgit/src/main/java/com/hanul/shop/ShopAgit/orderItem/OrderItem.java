@@ -1,11 +1,14 @@
 package com.hanul.shop.ShopAgit.orderItem;
 
+import com.hanul.shop.ShopAgit.common.exception.DomainException;
+import com.hanul.shop.ShopAgit.common.exception.ErrorCode;
 import com.hanul.shop.ShopAgit.order.Order;
 import com.hanul.shop.ShopAgit.product.domain.Product;
 import jakarta.persistence.*;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+
 @Entity
 @Getter
 public class OrderItem {
@@ -46,17 +49,16 @@ public class OrderItem {
 
     public static OrderItem createOrderItem(Product product, int count) {
 
-        //TODO 익셉션 생성 할 것.
-        if (count <= 0) { return null;}
-        else if (product == null) { return null;}
-        else if (product.getPrice() <= 0) { return null;}
+        if (count <= 0) throw new DomainException(ErrorCode.INVALID_COUNT);
+        else if (product == null) throw new DomainException(ErrorCode.PRODUCT_NOT_FOUND);
+        else if (product.getPrice() <= 0) throw new DomainException(ErrorCode.INVALID_PRICE);
 
 
         return new OrderItem(product, count);
     }
 
     //편의 관계 메소드, 상위 비즈니스 개념 Order 에서 등록 처리.
-    public void registryOrder(Order order) {
+    public void linkOrder(Order order) {
         this.order = order;
     }
 }

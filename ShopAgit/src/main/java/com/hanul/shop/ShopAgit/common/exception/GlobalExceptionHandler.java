@@ -8,30 +8,11 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-
-    @ExceptionHandler(InvalidPriceException.class)
-    public ResponseEntity<ApiResponse<Void>> handleInvalidPrice(InvalidPriceException e){
+    @ExceptionHandler(DomainException.class)
+    public ResponseEntity<ApiResponse<Void>> handleDomain(DomainException e){
         ErrorCode errorCode = e.getErrorCode();
         return ResponseEntity
                 .status(errorCode.getStatus())
                 .body(ApiResponse.error(errorCode));
     }
-
-    @ExceptionHandler(NameMissingException.class)
-    public ResponseEntity<ApiResponse<Void>> handleNameMissing(NameMissingException e){
-        ErrorCode errorCode = e.getErrorCode();
-        return ResponseEntity
-                .status(errorCode.getStatus())
-                .body(ApiResponse.error(errorCode));
-    }
-
-    @ExceptionHandler(InvalidStockException.class)
-    public ResponseEntity<ApiResponse<Void>> handleInvalidStock(InvalidStockException e){
-        ErrorCode errorCode = e.getErrorCode();
-        return ResponseEntity
-                .status(errorCode.getStatus())
-                .body(ApiResponse.error(errorCode));
-    }
-
-
 }
