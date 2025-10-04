@@ -8,6 +8,7 @@ import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Getter
 @Entity
@@ -29,6 +30,9 @@ public class Product {
     //TODO LAZY -> N+1 문제 추후 해결 할 것.
     @OneToMany(mappedBy = "product")
     private List<DiscountPolicyEntity> policyEntities = new ArrayList<>();
+
+    @OneToMany(mappedBy = "product")
+    private List<ProductImage> images = new ArrayList<>();
 
     //JPA용
     protected Product() {
@@ -70,6 +74,11 @@ public class Product {
     public void addPolicy(DiscountPolicyEntity policyEntity) {
         policyEntities.add(policyEntity);
         policyEntity.linkProduct(this);
+    }
+
+    public void addImage(ProductImage productImage) {
+        images.add(productImage);
+        productImage.linkProduct(this);
     }
 
 

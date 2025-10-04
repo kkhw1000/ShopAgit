@@ -14,5 +14,6 @@ public class ProductSummaryResponse {
     private final int originalPrice;
     private final List<DiscountInfo> discountInfo;
     private final int discountedPrice;
+    private final String thumbnailImgUrl;
 
 }

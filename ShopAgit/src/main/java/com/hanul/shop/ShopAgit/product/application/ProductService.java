@@ -2,8 +2,10 @@ package com.hanul.shop.ShopAgit.product.application;
 
 import com.hanul.shop.ShopAgit.common.exception.ErrorCode;
 import com.hanul.shop.ShopAgit.common.exception.ProductNotFoundException;
+import com.hanul.shop.ShopAgit.discount.DiscountService;
 import com.hanul.shop.ShopAgit.discount.policy.DiscountType;
 import com.hanul.shop.ShopAgit.product.domain.Product;
+import com.hanul.shop.ShopAgit.product.domain.ProductImage;
 import com.hanul.shop.ShopAgit.product.domain.ProductRepository;
 import com.hanul.shop.ShopAgit.product.presentation.DiscountInfo;
 import com.hanul.shop.ShopAgit.product.presentation.ProductSummaryResponse;
@@ -26,6 +28,7 @@ import java.util.stream.Collectors;
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final DiscountService  discountService;
 
 
     public Product create(String name, int price, int stock) {
@@ -69,12 +72,19 @@ public class ProductService {
                         .build())
                 .toList();
 
+        String url = product.getImages().stream()
+                .filter(ProductImage::isThumbnail)
+                .findFirst()
+                .map(ProductImage::getUrl)
+                .orElse("/default.jpg");
+
         ProductSummaryResponse dto = ProductSummaryResponse.builder()
                 .id(product.getId())
                 .name(product.getName())
                 .originalPrice(product.getPrice())
                 .discountInfo(list)
-                .discountedPrice(1000) //TODO DUMMY데이터 삽입 중 나중에 해결할 것.
+                .discountedPrice(discountService.calculateFinalPrice(product))
+                .thumbnailImgUrl(url)
                 .build();
 
         return dto;

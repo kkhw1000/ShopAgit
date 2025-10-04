@@ -4,21 +4,20 @@ import com.hanul.shop.ShopAgit.common.exception.DomainException;
 import com.hanul.shop.ShopAgit.common.exception.ErrorCode;
 import com.hanul.shop.ShopAgit.discount.policy.DiscountPolicy;
 
-public class FixedDiscountDecorator implements DiscountPolicy {
+public class RateDiscountDecorator implements DiscountPolicy {
 
     private final DiscountPolicy discountPolicy;
-    private final int amount;
+    private final int percent;
 
-    public FixedDiscountDecorator(DiscountPolicy discountPolicy, int amount) {
+    public RateDiscountDecorator(DiscountPolicy discountPolicy, int percent) {
         this.discountPolicy = discountPolicy;
-        if (amount <= 0) throw new DomainException(ErrorCode.INVALID_DISCOUNT_VALUE);
-        this.amount = amount;
+        if (percent <= 0 || percent > 100) throw new DomainException(ErrorCode.INVALID_DISCOUNT_PERCENT);
+        this.percent = percent;
     }
 
     @Override
     public int apply(int price) {
         int appliedPrice = discountPolicy.apply(price);
-        return appliedPrice - amount;
+        return appliedPrice - (appliedPrice * percent / 100);
     }
-
 }

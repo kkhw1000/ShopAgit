@@ -1,8 +1,10 @@
 package com.hanul.shop.ShopAgit.product.domain;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 
 @Entity
+@Getter
 public class ProductImage {
 
     @Id
@@ -23,4 +25,7 @@ public class ProductImage {
     protected ProductImage() {
     }
 
+    public void linkProduct(Product product) {
+        this.product = product;
+    }
 }
