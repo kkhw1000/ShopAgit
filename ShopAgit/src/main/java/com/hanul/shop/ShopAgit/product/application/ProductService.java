@@ -3,7 +3,6 @@ package com.hanul.shop.ShopAgit.product.application;
 import com.hanul.shop.ShopAgit.common.exception.ErrorCode;
 import com.hanul.shop.ShopAgit.common.exception.ProductNotFoundException;
 import com.hanul.shop.ShopAgit.discount.DiscountService;
-import com.hanul.shop.ShopAgit.discount.policy.DiscountType;
 import com.hanul.shop.ShopAgit.product.domain.Product;
 import com.hanul.shop.ShopAgit.product.domain.ProductImage;
 import com.hanul.shop.ShopAgit.product.domain.ProductRepository;
@@ -12,14 +11,11 @@ import com.hanul.shop.ShopAgit.product.presentation.ProductSummaryResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -65,7 +61,7 @@ public class ProductService {
 
     private ProductSummaryResponse toProductSummaryResponse(Product product) {
 
-        List<DiscountInfo> list = product.getPolicyEntities().stream().map
+        List<DiscountInfo> list = discountService.findProductDiscount().stream().map
                         (policy -> DiscountInfo.builder()
                         .type(policy.getDiscountType())
                         .value(policy.getValue())

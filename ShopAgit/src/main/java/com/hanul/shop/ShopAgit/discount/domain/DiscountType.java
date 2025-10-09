@@ -1,4 +1,4 @@
-package com.hanul.shop.ShopAgit.discount.policy;
+package com.hanul.shop.ShopAgit.discount.domain;
 
 import lombok.Getter;
 
