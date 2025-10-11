@@ -3,10 +3,11 @@ package com.hanul.shop.ShopAgit.product.application;
 import com.hanul.shop.ShopAgit.common.exception.ErrorCode;
 import com.hanul.shop.ShopAgit.common.exception.ProductNotFoundException;
 import com.hanul.shop.ShopAgit.discount.DiscountService;
+import com.hanul.shop.ShopAgit.discount.domain.DiscountType;
 import com.hanul.shop.ShopAgit.product.domain.Product;
 import com.hanul.shop.ShopAgit.product.domain.ProductImage;
 import com.hanul.shop.ShopAgit.product.domain.ProductRepository;
-import com.hanul.shop.ShopAgit.product.presentation.DiscountInfo;
+import com.hanul.shop.ShopAgit.product.presentation.DiscountInfoResponse;
 import com.hanul.shop.ShopAgit.product.presentation.ProductSummaryResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -61,11 +62,15 @@ public class ProductService {
 
     private ProductSummaryResponse toProductSummaryResponse(Product product) {
 
-        List<DiscountInfo> list = discountService.findProductDiscount().stream().map
-                        (policy -> DiscountInfo.builder()
-                        .type(policy.getDiscountType())
-                        .value(policy.getValue())
-                        .build())
+        List<DiscountInfoResponse> list = discountService.findByProductId(product).stream().map
+                        (policy -> {
+                            DiscountType discountType = policy.getDiscountPolicyDefinition().getDiscountType();
+                            int value = policy.getDiscountPolicyDefinition().getValue();
+                            return DiscountInfoResponse.builder()
+                                    .type(discountType.name())
+                                    .value(value)
+                                    .build();
+                        })
                 .toList();
 
         String url = product.getImages().stream()
@@ -79,7 +84,7 @@ public class ProductService {
                 .name(product.getName())
                 .originalPrice(product.getPrice())
                 .discountInfo(list)
-                .discountedPrice(discountService.calculateFinalPrice(product))
+                .discountedPrice(discountService.calculateDiscount(product))
                 .thumbnailImgUrl(url)
                 .build();
 

@@ -6,9 +6,9 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class DiscountInfo {
+public class DiscountInfoResponse {
 
-    private final DiscountType type;
+    private final String    type;
     private final double value;
 
 }
