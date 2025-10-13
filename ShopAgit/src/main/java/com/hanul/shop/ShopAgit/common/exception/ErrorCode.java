@@ -13,6 +13,7 @@ public enum ErrorCode {
     INVALID_DISCOUNT_PERCENT(400,"INVALID_DISCOUNT_PERCENT" ,"할인율은 1 ~ 99 사이여야 합니다." ),
     CANNOT_CHANGE_STATUS(400,"CANNOT_CHANGE_STATUS" ,"주문 상태를 변경 할 수 없습니다." ),
     INVALID_DISCOUNT_VALUE(400,"INVALID_DISCOUNT_VALUE" ,"할인 가격은 음수가 될 수 없습니다." ),
+    INVALID_START_DATE(400,"INVALID_START_DATE" ,"시작일은 종료일 이후일 수 없습니다." ),
     //TODO 더 복잡해 지면 세분화할것. ex) CANNOT_CANCEL_DELIVERED_ORDER 등...
 
 

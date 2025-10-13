@@ -1,5 +1,7 @@
 package com.hanul.shop.ShopAgit.discount.domain;
 
+import com.hanul.shop.ShopAgit.common.exception.DomainException;
+import com.hanul.shop.ShopAgit.common.exception.ErrorCode;
 import com.hanul.shop.ShopAgit.product.domain.Product;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -21,22 +23,25 @@ public class DiscountProductRule {
     private DiscountPolicyDefinition discountPolicyDefinition;
 
 
-    LocalDate startAt;
+    private LocalDate startAt;
 
-    LocalDate endAt;
+    private LocalDate endAt;
 
     protected DiscountProductRule() {}
 
-    private DiscountProductRule(Product product, DiscountPolicyDefinition discountPolicyDefinition) {
+    private DiscountProductRule(Product product, DiscountPolicyDefinition discountPolicyDefinition, LocalDate startAt, LocalDate endAt) {
         this.product = product;
         this.discountPolicyDefinition = discountPolicyDefinition;
+        this.startAt = startAt;
+        this.endAt = endAt;
     }
 
-    public static DiscountProductRule create(Product product, DiscountPolicyDefinition discountPolicyDefinition) {
+    public static DiscountProductRule create(Product product, DiscountPolicyDefinition discountPolicyDefinition, LocalDate startAt, LocalDate endAt) {
 
-        //todo: 도메인 규칙 만들 것.
 
-        return new DiscountProductRule(product, discountPolicyDefinition);
+        if (startAt.isAfter(endAt)) throw new DomainException(ErrorCode.INVALID_START_DATE);
+
+        return new DiscountProductRule(product, discountPolicyDefinition, startAt, endAt);
     }
 
 }
